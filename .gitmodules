@@ -1,3 +1,0 @@
-[submodule "apps/ege_django_theme"]
-	path = apps/ege_django_theme
-	url = https://github.com/CoticEaDIFRN/ege-django-theme.git
