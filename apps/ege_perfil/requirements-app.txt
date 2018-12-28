@@ -1,2 +1,0 @@
-# -e /libs/ege_django_auth_jwt
-# ege_django_auth_jwt==1.0

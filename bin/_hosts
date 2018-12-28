@@ -1,2 +1,0 @@
-#!/bin/bash
-echo "127.0.0.1 perfil acesso authn" >> /etc/hosts

@@ -1,7 +1,0 @@
-#!/bin/bash
-source _color_logs
-
-./_down
-#rm -f .env
-sudo rm -rf ../volumes
-

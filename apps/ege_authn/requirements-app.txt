@@ -1,2 +1,0 @@
-#-e ../ege_django_theme
-ege-django-theme==0.4.7

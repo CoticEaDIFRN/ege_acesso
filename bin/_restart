@@ -1,6 +1,0 @@
-#!/bin/bash
-source _color_logs
-
-./_down $@
-./_up -d $@
-

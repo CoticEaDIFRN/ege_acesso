@@ -1,6 +1,0 @@
-#!/bin/bash
-source _color_logs
-
-./acesso_migrate
-./acesso_run python manage.py init_dev
-

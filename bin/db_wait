@@ -1,9 +1,0 @@
-#!/bin/bash
-source _color_logs
-
-echo_info "Aguardando a base de dados..."
-until docker-compose exec db psql -h localhost -U $POSTGRES_USER -d $POSTGRES_DB_ACESSO -c '\l' >/dev/null 2>&1; do
-  echo_warning "Postgres is unavailable - sleeping"; sleep 1
-done
-
-echo_success "Connectado com sucesso"

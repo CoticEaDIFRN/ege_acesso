@@ -1,4 +1,0 @@
-#!/bin/bash
-source _color_logs
-
-docker-compose run acesso sh -c 'pip install --upgrade -r requirements-app.txt && python3 manage.py migrate'
