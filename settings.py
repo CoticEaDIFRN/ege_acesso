@@ -115,7 +115,7 @@ SESSION_COOKIE_SECURE = env_as_bool('DJANGO_SESSION_COOKIE_SECURE', False)
 
 # URL and routers
 URL_PATH_PREFIX = env('ACESSO_URL_PATH_PREFIX', 'ege/acesso/')
-STATIC_URL = "/%s%s" % (URL_PATH_PREFIX, env('DJANGO_STATIC_URL', 'static/'))
+STATIC_URL = "/%s%s" % (URL_PATH_PREFIX, env('DJANGO_STATIC_URL', 'ege/acesso/static/'))
 STATIC_ROOT = "/static"
 ROOT_URLCONF = env('DJANGO_ROOT_URLCONF', 'urls')
 
