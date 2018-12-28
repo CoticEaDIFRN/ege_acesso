@@ -50,23 +50,3 @@ Desenvolver e implementar um Web Single Sign-On (W-SSO) e um Android Mobile Auth
 7.	Deverá permitir que o usuário tenha mais de uma função institucional atribuída a sua identidade e que cada um esteja associado a uma UOrg., com período de início e fim devidamente definidos.
 8.	Poderá usar como opções de W-SSO as implementações da lista Lista 2.
 
-
-## Iniciando o projeto
-```
-git clone https://github.com/CoticEaDIFRN/ege_build.git
-cd ege_build
-git submodule update --init
-cd bin
-cp example.env .env
-./_build 
-./_deploy
-./db_up
-./proxy_up
-
-# em outra janela
-./acesso_up
-
-# em mais uma janela
-./perfil_up
-```
- 
