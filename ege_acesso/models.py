@@ -33,25 +33,6 @@ def validate_url(url, urls_string):
 
 
 class User(AbstractUser):
-    """
-department:	Setor/Campus
-displayName:	Nome completo do cara
-extensionAttribute1:	Setor superior/Campus
-extensionAttribute10:	Ativo
-extensionAttribute2:	Cargo
-extensionAttribute3:	Função
-extensionAttribute4:	nome.sobrenoem@academico.email.edu.br
-extensionAttribute6:	12345678901
-mail:	nome.sobrenoem@email.edu.br
-sAMAccountName:	1234567
-givenName:	Nome
-sn:	completo do cara
-title:	Cargo
-whenChanged:	20010203040506.0Z
-whenCreated:	20010203040506.0Z
-pwdLastSet:	03/02/2001 04:05
-thumbnailPhoto:
-    """
     username = CharField(_('username'), max_length=150, primary_key=True)
     first_name = CharField(_('givenName'), max_length=150, null=True, blank=True)
     last_name = CharField(_('sn'), max_length=150, null=True, blank=True)
