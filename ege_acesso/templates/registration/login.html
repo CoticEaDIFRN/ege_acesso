@@ -1,87 +1,79 @@
 {% extends "admin/base_site.html" %}
+{% load i18n static %}
+
 {% block top_bar %}{% endblock %}
 {% block left_menu %}{% endblock %}
 {% block content_title %}{% endblock %}
+{% block extrastyle %}
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+{% endblock %}
 
-{% load i18n static %}
-{% load static %}
 
 {% block content %}
-[{{user.last_name}}] [{{get_host}}]
-    {% if form.errors and not form.non_field_errors %}
-        <p class="errornote">
-            {% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
-        </p>
-    {% endif %}
 
-    {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
+    <div id="main" class="d-flex flex-row justify-content-center w-100">
+        {% if form.errors and not form.non_field_errors %}
             <p class="errornote">
-                {{ error }}
+                {% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
             </p>
-        {% endfor %}
-    {% endif %}
+        {% endif %}
 
-    {% if user.is_authenticated %}
-        <p class="errornote">
-        {% blocktrans trimmed %}
-            You are authenticated as {{ username }}, but are not authorized to
-            access this page. Would you like to login to a different account?
-        {% endblocktrans %}
-        </p>
-    {% endif %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <p class="errornote">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        {% endif %}
 
-    <!DOCTYPE html>
-    <html lang="pt-br">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Document</title>
-            <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
-            <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-
-        </head>
-        <body>
-            <div id="main" class="d-flex flex-row justify-content-center w-100">
-                <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
-                    <input type="hidden" name="next" value="{{ next }}">
-                    <img class="d-md-none w-75 mb-4" src="https://ead.ifrn.edu.br/portal/wp-content/uploads/2017/04/logo_IFRN_EaD.png" alt="Logo IFRN EaD">
-                    <div class="group">
-                        <h2 class="text-center" style="color: #113515;">ACADÊMICO</h2>
-                    </div>
-
-                    <div class="group">
-                        {{ form.username.errors }}
-                        {{ form.username }}
-                        <label>Username</label>
-                    </div>
-                    <div class="group">
-                        {{ form.password.errors }}
-                        {{ form.password }}
-                        <label>Password</label>
-                    </div>
-
-                    {% url 'admin_password_reset' as password_reset_url %}
-                    {% comment %}{% if password_reset_url %}{% endcomment %}
-                        <div class="group">
-                            <a href="https://suap.ifrn.edu.br/comum/solicitar_trocar_senha/" style="color: #3eb24f; font-weight: bold; text-decoration: none;"><small>{% trans 'Forgotten your password or username?' %}</small></a>
-                        </div>
-                    {% comment %}{% endif %}{% endcomment %}
-
-                    <button type="submit" class="button buttonGreen">{% trans 'Log in' %}
-                        <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
-                    </button>
-                </form>
-
-                <div id="instanciaMoodle" class="d-none d-md-flex flex-row justify-content-center align-items-center mt-3 mb-3">
-                    <p class="text-center"><img class="w-75" src="https://ead.ifrn.edu.br/ava/academico/theme/boost_eadifrn/pix/eadifrn-logo.svg" alt="Logo IFRN EaD"></p>
-                </div>
+        {% if user.is_authenticated %}
+            <p class="errornote">
+            {% blocktrans trimmed %}
+                You are authenticated as {{ username }}, but are not authorized to
+                access this page. Would you like to login to a different account?
+            {% endblocktrans %}
+            </p>
+        {% endif %}
+        <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <img class="d-md-none w-75 mb-4" src="https://ead.ifrn.edu.br/portal/wp-content/uploads/2017/04/logo_IFRN_EaD.png" alt="Logo IFRN EaD">
+            <div class="group">
+                <h2 class="text-center" style="color: #113515;">ACADÊMICO</h2>
             </div>
 
-            <script src="{% static 'js/jquery.js' %}"></script>
-            <script src="{% static 'js/login.js' %}"></script>
+            <div class="group">
+                {{ form.username.errors }}
+                {{ form.username }}
+                <label>Username</label>
+            </div>
+            <div class="group">
+                {{ form.password.errors }}
+                {{ form.password }}
+                <label>Password</label>
+            </div>
 
-        </body>
-    </html>
+            {% url 'admin_password_reset' as password_reset_url %}
+            {% comment %}{% if password_reset_url %}{% endcomment %}
+                <div class="group">
+                    <a href="https://suap.ifrn.edu.br/comum/solicitar_trocar_senha/" style="color: #3eb24f; font-weight: bold; text-decoration: none;"><small>{% trans 'Forgotten your password or username?' %}</small></a>
+                </div>
+            {% comment %}{% endif %}{% endcomment %}
+
+            <button type="submit" class="button buttonGreen">{% trans 'Log in' %}
+                <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+            </button>
+        </form>
+
+        <div id="instanciaMoodle" class="d-none d-md-flex flex-row justify-content-center align-items-center mt-3 mb-3">
+            <p class="text-center"><img class="w-75" src="https://ead.ifrn.edu.br/ava/academico/theme/boost_eadifrn/pix/eadifrn-logo.svg" alt="Logo IFRN EaD"></p>
+        </div>
+    </div>
+
+
 {% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+{% endblock javascript%}
