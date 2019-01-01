@@ -150,14 +150,8 @@ LOGIN_URL = '/%slogin/' % URL_PATH_PREFIX
 LOGOUT_URL = '/%slogout/' % URL_PATH_PREFIX
 LOGIN_REDIRECT_URL = '/%sperfil' % URL_PATH_PREFIX
 LOGOUT_REDIRECT_URL = '/%s../perfil' % URL_PATH_PREFIX
-AUTHENTICATION_BACKENDS = env_as_list('DJANGO_AUTHENTICATION_BACKENDS',
-                                      'django_python3_ldap.auth.LDAPBackend,'
-                                      'django.contrib.auth.backends.ModelBackend')
-AUTH_PASSWORD_VALIDATORS = env_as_list_of_maps('DJANGO_UTH_PASSWORD_VALIDATORS', 'NAME',
-                                               'django.contrib.auth.password_validation.UserAttributeSimilarityValidator,'
-                                               'django.contrib.auth.password_validation.MinimumLengthValidator,'
-                                               'django.contrib.auth.password_validation.CommonPasswordValidator,'
-                                               'django.contrib.auth.password_validation.NumericPasswordValidator')
+AUTHENTICATION_BACKENDS = env_as_list('DJANGO_AUTHENTICATION_BACKENDS', 'django_python3_ldap.auth.LDAPBackend')
+AUTH_PASSWORD_VALIDATORS = env_as_list_of_maps('DJANGO_UTH_PASSWORD_VALIDATORS', 'NAME', '')
 AUTH_USER_MODEL = env("DJANGO_AUTH_USER_MODEL", 'ege_acesso.User')
 
 

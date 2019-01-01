@@ -21,11 +21,34 @@ import datetime
 import jwt
 import urllib
 import uuid
+import hashlib
+import re
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Model, ForeignKey, CASCADE
 from django.db.models import CharField, DateTimeField, BooleanField, TextField, FileField, PositiveIntegerField
 from django.contrib.auth.models import AbstractUser
+
+active_directory_timestamp_pattern = re.compile('^'
+                                                '(?P<year>\d{4})'
+                                                '(?P<month>\d{2})'
+                                                '(?P<day>\d{2})'
+                                                '(?P<hour>\d{2})'
+                                                '(?P<minute>\d{2})'
+                                                '(?P<second>\d{2})'
+                                                '\.'
+                                                '(?P<zone>0Z)'
+                                                '$')
+
+
+def _cast_timestamp(old):
+    if isinstance(old, str) and old is not None:
+        result = active_directory_timestamp_pattern.match(old)
+        if result:
+            parts = result.groupdict()
+            if len(parts) == 7:
+                return "{year}-{month}-{day} {hour}:{minute}:{second}".format(**parts)
+    return None
 
 
 def validate_url(url, urls_string):
@@ -34,31 +57,40 @@ def validate_url(url, urls_string):
 
 class User(AbstractUser):
     username = CharField(_('username'), max_length=150, primary_key=True)
-    first_name = CharField(_('givenName'), max_length=150, null=True, blank=True)
-    last_name = CharField(_('sn'), max_length=150, null=True, blank=True)
-    social_name = CharField(_('social_name'), max_length=150, null=True, blank=True)
-    department = CharField(_('department'), max_length=150, null=True, blank=True)
-    campus = CharField(_('extensionAttribute1'), max_length=150, null=True, blank=True)
-    active = CharField(_('extensionAttribute10'), max_length=150, null=True, blank=True)
-    is_active = BooleanField(_('Está ativo?'), default=True)
+    cpf = CharField(_('cpf'), max_length=255, null=True, blank=True)
+
+    is_active = BooleanField(_('is active'), default=True)
     is_staff = BooleanField(_('staff status'), default=False)
     is_superuser = BooleanField(_('superuser status'), default=False)
-    carrer = CharField(_('extensionAttribute2'), max_length=150, null=True, blank=True)
-    job = CharField(_('extensionAttribute3'), max_length=150, null=True, blank=True)
-    cpf = CharField(_('extensionAttribute6'), max_length=150, null=True, blank=True)
-    academic_email = CharField(_('extensionAttribute4'), max_length=150, null=True, blank=True)
-    enterprise_email = CharField(_('mail'), max_length=150, null=True, blank=True)
-    email = CharField(_('personal mail'), max_length=150, null=True, blank=True)
-    title = CharField(_('title'), max_length=150, null=True, blank=True)
-    photo_blob = TextField(_('thumbnailPhoto'), null=True, blank=True)
-    created_at = DateTimeField(_('whenCreated'), max_length=150, null=True, blank=True)
-    changed_at = DateTimeField(_('whenChanged'), max_length=150, null=True, blank=True)
-    password_set_at = DateTimeField(_('pwdLastSet'), max_length=150, null=True, blank=True)
-    last_access = DateTimeField(_('last access'), null=True, blank=True)
-    last_ad_access_at = DateTimeField(_('last access'), null=True, blank=True)
-    date_joined = DateTimeField(_('date joined'), default=timezone.now)
-    first_access_at = DateTimeField(_('last access'), null=True, blank=True)
-    deleted_at = DateTimeField(_('deletedAt'), null=True, blank=True)
+    active = CharField(_('active'), max_length=255, null=True, blank=True)
+
+    presentation_name = CharField(_('presentation name'), max_length=255, null=True, blank=True)
+    civil_name = CharField(_('civil name'), max_length=255, null=True, blank=True)
+    social_name = CharField(_('social name'), max_length=255, null=True, blank=True)
+    first_name = CharField(_('first name'), max_length=255, null=True, blank=True)
+    last_name = CharField(_('last name'), max_length=255, null=True, blank=True)
+
+    campus = CharField(_('campus'), max_length=255, null=True, blank=True)
+    department = CharField(_('department'), max_length=255, null=True, blank=True)
+    title = CharField(_('title'), max_length=255, null=True, blank=True)
+    carrer = CharField(_('carrer'), max_length=255, null=True, blank=True)
+    job = CharField(_('job'), max_length=255, null=True, blank=True)
+
+    email = CharField(_('personal mail'), max_length=250, null=True, blank=True)
+    enterprise_email = CharField(_('enterprise email'), max_length=250, null=True, blank=True)
+    academic_email = CharField(_('academic email'), max_length=250, null=True, blank=True)
+    scholar_email = CharField(_('scholar email'), max_length=250, null=True, blank=True)
+
+    first_access = DateTimeField(_('date joined'), auto_now_add=True)
+    last_access = DateTimeField(_('last access'), auto_now=True)
+    deleted = DateTimeField(_('deleted at'), null=True, blank=True)
+
+    created_at = DateTimeField(_('created at'), null=True, blank=True)
+    changed_at = DateTimeField(_('changed at'), null=True, blank=True)
+    password_set_at = DateTimeField(_('password set at'), null=True, blank=True)
+    last_access_at = DateTimeField(_('last ad access'), null=True, blank=True)
+
+    photo_blob = TextField(_('photo'), null=True, blank=True)
 
     class Meta:
         verbose_name = _('User')
@@ -66,31 +98,42 @@ class User(AbstractUser):
         ordering = ['first_name']
 
     def __str__(self):
-        return "%s (%s as a %s)" % (self.username, self.presentation_name, self.status)
+        return self.printing_name
 
     def save(self, *args, **kwargs):
         self.is_active = 'Ativo' == self.active
+
+        self.created_at = _cast_timestamp(self.created_at)
+        self.changed_at = _cast_timestamp(self.changed_at)
+        self.password_set_at = _cast_timestamp(self.password_set_at)
+        self.last_access_at = _cast_timestamp(self.last_access_at)
+
+        self.email = self.email or self.enterprise_email or self.academic_email or self.scholar_email
+
+        self.civil_name = "%s %s" % (self.first_name, self.last_name)
+        self.presentation_name = self.social_name or self.civil_name
+
         super().save(*args, **kwargs)
 
     @property
-    def presentation_name(self):
-        if self.social_name is not None:
-            return self.social_name
-        elif self.first_name is not None and self.last_name is not None:
-            return "%s %s" % (self.first_name, self.last_name)
-        else:
-            return self.username
+    def printing_name(self):
+        if self.social_name and self.social_name != self.civil_name:
+            return "%s (%s)" % (self.social_name, self.civil_name)
+        return self.civil_name
 
     @property
     def status(self):
         result = ""
+        result += "%s " % (_("active") if self.is_active else _("inactive"))
         if self.is_superuser:
-            result += "%s" % _("superuser")
+            result += "(%s" % _("superuser")
+            if not self.is_staff:
+                result += " %s" % _("but not a staff")
+            result += ")"
         elif self.is_staff:
-            result += "%s" % _("staff")
+            result += "(%s)" % _("staff")
         else:
-            result += "%s" % _("user")
-        result += " %s" % (_("is active") if self.is_active else _("is inactive"))
+            result += "(%s)" % _("user")
         return result
 
 
@@ -114,6 +157,12 @@ class Application(Model):
 
     def __str__(self):
         return "%s [%s]" % (self.nome, self.responsavel)
+
+    def save(self, *args, **kwargs):
+        if self.client_id is None or self.client_id == '' or self.secret is None or self.secret == '':
+            self.client_id = hashlib.sha1(("%s" % uuid.uuid1()).encode('utf-8')).hexdigest()
+            self.secret = hashlib.sha3_512(("%s" % uuid.uuid1()).encode('utf-8')).hexdigest()
+        super().save(*args, **kwargs)
 
     @staticmethod
     def authorize(user, client_id, state, redirect_uri, referer):

@@ -17,34 +17,33 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from django.contrib.admin import register, ModelAdmin
+from django.contrib.admin import register, ModelAdmin, TabularInline
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.admin import UserAdmin as OriginalUserAdmin
 from .models import User, Application
 
 
+class ApplicationInline(TabularInline):
+    model = Application
+
+
 @register(User)
-class UserAdmin(OriginalUserAdmin):
-    readonly_fields = ('last_login', 'date_joined')
-    change_user_password_template = None
+class UserAdmin(ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('username', 'password', 'date_joined', 'last_login')}),
-        # (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')}),
+        (None, {'fields': ('username', 'cpf', 'civil_name', 'social_name', 'status', 'active')}),
+        (_('Relationship'), {'fields': ('campus', 'department', 'title', 'carrer', 'job')}),
+        (_('E-Mails'), {'fields': ('email', 'enterprise_email', 'academic_email', 'scholar_email')}),
+        (_('Dates'), {'fields': ('first_access', 'last_access', 'deleted')}),
+        (_('Active Directory Dates'), {'fields': ('created_at', 'changed_at', 'password_set_at', 'last_access_at')}),
+        # (_('Foto'), {'fields': ('photo_blob', )}),
+        # (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')}),
     )
-    add_fieldsets = (
-        (None, {'classes': ('wide',), 'fields': ('username', 'password1', 'password2')}),
-        # (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')}),
-    )
-    list_display = ('username', 'get_full_name', 'status')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
-    search_fields = ('username', 'first_name', 'last_name', 'email')
+    readonly_fields = []
+    for fs in fieldsets:
+        readonly_fields += fs[1]['fields']
+    list_display = ('username', 'printing_name', 'cpf', 'status')
+    list_filter = ('is_staff', 'is_superuser', 'is_active') + fieldsets[1][1]['fields']
+    # + ('groups',)
+    search_fields = ('username', 'civil_name', 'social_name', 'email') + fieldsets[2][1]['fields']
     ordering = ('username',)
-    filter_horizontal = ('groups', 'user_permissions',)
-    # status.short_description = _('status')
-
-
-@register(Application)
-class ApplicationAdmin(ModelAdmin):
-    pass
+    # filter_horizontal = ('groups', 'user_permissions',)
+    inlines = [ApplicationInline]
