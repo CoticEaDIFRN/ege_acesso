@@ -22,33 +22,22 @@ import jwt
 import urllib
 import uuid
 import hashlib
-import re
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Model, ForeignKey, CASCADE
 from django.db.models import CharField, DateTimeField, BooleanField, TextField, FileField, PositiveIntegerField
 from django.contrib.auth.models import AbstractUser
 
-active_directory_timestamp_pattern = re.compile('^'
-                                                '(?P<year>\d{4})'
-                                                '(?P<month>\d{2})'
-                                                '(?P<day>\d{2})'
-                                                '(?P<hour>\d{2})'
-                                                '(?P<minute>\d{2})'
-                                                '(?P<second>\d{2})'
-                                                '\.'
-                                                '(?P<zone>0Z)'
-                                                '$')
-
 
 def _cast_timestamp(old):
-    if isinstance(old, str) and old is not None:
-        result = active_directory_timestamp_pattern.match(old)
-        if result:
-            parts = result.groupdict()
-            if len(parts) == 7:
-                return "{year}-{month}-{day} {hour}:{minute}:{second}".format(**parts)
-    return None
+    if old is None or not isinstance(old, str):
+        return old
+    try:
+        return datetime.datetime.strptime(old, '%Y%m%d%H%M%S.0Z')
+    except ValueError as e:
+        try:
+            return datetime.datetime.strptime(old, '%d/%m/%Y %H:%M')
+        except ValueError as e:
+            return None
 
 
 def validate_url(url, urls_string):
@@ -105,8 +94,8 @@ class User(AbstractUser):
 
         self.created_at = _cast_timestamp(self.created_at)
         self.changed_at = _cast_timestamp(self.changed_at)
-        self.password_set_at = _cast_timestamp(self.password_set_at)
-        self.last_access_at = _cast_timestamp(self.last_access_at)
+        self.password_set_at = _cast_timestamp(self.password_set_at) # 02/10/2018 20:19
+        self.last_access_at = _cast_timestamp(self.last_access_at) # 24/12/2018 13:34
 
         self.email = self.email or self.enterprise_email or self.academic_email or self.scholar_email
 
@@ -225,26 +214,37 @@ class TransactionToken(Model):
     def generate_jwt(self):
         data = {
             'username': self.user.username,
-            'social_name': self.user.social_name,
-            'presentation_name': self.user.presentation_name,
-            'department': self.user.department,
-            'campus': self.user.campus,
+            'cpf': self.user.cpf,
+
             'is_active': self.user.is_active,
+            'active': self.user.active,
+            'status': self.user.status,
+
+            'presentation_name': self.user.presentation_name,
+            'civil_name': self.user.civil_name,
+            'social_name': self.user.social_name,
+
+            'campus': self.user.campus,
+            'department': self.user.department,
+            'title': self.user.title,
             'carrer': self.user.carrer,
             'job': self.user.job,
-            'cpf': self.user.cpf,
-            'academic_email': self.user.academic_email,
-            'enterprise_email': self.user.enterprise_email,
+
             'personal_email': self.user.email,
-            'title': self.user.title,
-            'photo_blob': self.user.photo_blob,
+            'enterprise_email': self.user.enterprise_email,
+            'academic_email': self.user.academic_email,
+            'scholar_email': self.user.scholar_email,
+
+            'first_access': "%s" % self.user.first_access,
+            'last_access': "%s" % self.user.last_access,
+            'deleted': "%s" % self.user.deleted,
+
             'created_at': "%s" % self.user.created_at,
             'changed_at': "%s" % self.user.changed_at,
             'password_set_at': "%s" % self.user.password_set_at,
-            'last_access_at': "%s" % self.user.last_access,
-            'last_ad_access_at': "%s" % self.user.last_ad_access_at,
-            'date_joined_at': "%s" % self.user.date_joined,
-            'first_access_at': "%s" % self.user.first_access_at,
+            'last_access_at': "%s" % self.user.last_access_at,
+
+            'photo_blob': self.user.photo_blob,
         }
         return jwt.encode(data, self.application.secret, algorithm='HS512')
 
@@ -253,5 +253,5 @@ class TransactionToken(Model):
         application = Application.validate_client_id(client_id)
         transaction_token = TransactionToken.objects.select_related('application').\
             get(application=application, hashcode=auth_token, expire_at__gt=datetime.datetime.now())
-        transaction_token.delete()
+        # transaction_token.delete()
         return transaction_token.generate_jwt()

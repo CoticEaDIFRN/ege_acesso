@@ -62,7 +62,7 @@ class Command(BaseCommand):
                 su.changed_at = datetime.datetime.now()
                 su.password_set_at = datetime.datetime.now()
                 su.last_access = datetime.datetime.now()
-                su.last_ad_access_at = datetime.datetime.now()
+                su.last_access_at = datetime.datetime.now()
                 su.date_joined = datetime.datetime.now()
                 su.first_access_at = None
                 su.deleted_at = None
