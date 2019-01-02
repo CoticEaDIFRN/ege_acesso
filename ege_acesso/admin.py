@@ -34,7 +34,7 @@ class UserAdmin(ModelAdmin):
         (_('E-Mails'), {'fields': ('email', 'enterprise_email', 'academic_email', 'scholar_email')}),
         (_('Dates'), {'fields': ('first_access', 'last_access', 'deleted')}),
         (_('Active Directory Dates'), {'fields': ('created_at', 'changed_at', 'password_set_at', 'last_access_at')}),
-        # (_('Foto'), {'fields': ('photo_blob', )}),
+        # (_('Foto'), {'fields': ('photo_url', )}),
         # (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')}),
     )
     readonly_fields = []

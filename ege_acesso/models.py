@@ -26,16 +26,17 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models import Model, ForeignKey, CASCADE
 from django.db.models import CharField, DateTimeField, BooleanField, TextField, FileField, PositiveIntegerField
 from django.contrib.auth.models import AbstractUser
+from django.utils.timezone import make_aware
 
 
 def _cast_timestamp(old):
     if old is None or not isinstance(old, str):
         return old
     try:
-        return datetime.datetime.strptime(old, '%Y%m%d%H%M%S.0Z')
+        return make_aware(datetime.datetime.strptime(old, '%Y%m%d%H%M%S.0Z'))
     except ValueError as e:
         try:
-            return datetime.datetime.strptime(old, '%d/%m/%Y %H:%M')
+            return make_aware(datetime.datetime.strptime(old, '%d/%m/%Y %H:%M'))
         except ValueError as e:
             return None
 
@@ -60,10 +61,16 @@ class User(AbstractUser):
     last_name = CharField(_('last name'), max_length=255, null=True, blank=True)
 
     campus = CharField(_('campus'), max_length=255, null=True, blank=True)
+    campus_code = CharField(_('campus code'), max_length=255, null=True, blank=True)
     department = CharField(_('department'), max_length=255, null=True, blank=True)
     title = CharField(_('title'), max_length=255, null=True, blank=True)
     carrer = CharField(_('carrer'), max_length=255, null=True, blank=True)
     job = CharField(_('job'), max_length=255, null=True, blank=True)
+    polo = CharField(_('polo'), max_length=255, null=True, blank=True, default=_('unknown'))
+    polo_code = CharField(_('polo code'), max_length=255, null=True, blank=True)
+
+    course = CharField(_('course'), max_length=255, null=True, blank=True)
+    course_code = CharField(_('course code'), max_length=255, null=True, blank=True)
 
     email = CharField(_('personal mail'), max_length=250, null=True, blank=True)
     enterprise_email = CharField(_('enterprise email'), max_length=250, null=True, blank=True)
@@ -79,7 +86,7 @@ class User(AbstractUser):
     password_set_at = DateTimeField(_('password set at'), null=True, blank=True)
     last_access_at = DateTimeField(_('last ad access'), null=True, blank=True)
 
-    photo_blob = TextField(_('photo'), null=True, blank=True)
+    photo_url = CharField(_('photo'), max_length=250, null=True, blank=True)
 
     class Meta:
         verbose_name = _('User')
@@ -175,7 +182,7 @@ class Application(Model):
         assert validate_url(redirect_uri, app.allowed_callback_urls), \
             "'redirect_uri' not present on '%s'" % (_('allowed_callback_urls'))
 
-        expire_at = datetime.datetime.now() + datetime.timedelta(minutes=10)
+        expire_at = make_aware(datetime.datetime.now() + datetime.timedelta(minutes=10))
 
         hashcode = "%s" % uuid.uuid1()
         TransactionToken.objects.create(application=app,
@@ -229,6 +236,10 @@ class TransactionToken(Model):
             'title': self.user.title,
             'carrer': self.user.carrer,
             'job': self.user.job,
+            'polo': self.user.polo,
+
+            'course': self.user.course,
+            'course_code': self.user.course_code,
 
             'personal_email': self.user.email,
             'enterprise_email': self.user.enterprise_email,
@@ -244,7 +255,7 @@ class TransactionToken(Model):
             'password_set_at': "%s" % self.user.password_set_at,
             'last_access_at': "%s" % self.user.last_access_at,
 
-            'photo_blob': self.user.photo_blob,
+            'photo_url': self.user.photo_url,
         }
         return jwt.encode(data, self.application.secret, algorithm='HS512')
 
@@ -252,6 +263,6 @@ class TransactionToken(Model):
     def validate(client_id, auth_token):
         application = Application.validate_client_id(client_id)
         transaction_token = TransactionToken.objects.select_related('application').\
-            get(application=application, hashcode=auth_token, expire_at__gt=datetime.datetime.now())
+            get(application=application, hashcode=auth_token, expire_at__gt=make_aware(datetime.datetime.now()))
         # transaction_token.delete()
         return transaction_token.generate_jwt()
