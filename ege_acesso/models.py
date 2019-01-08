@@ -19,7 +19,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import datetime
 import jwt
-import urllib
+from urllib.parse import urlparse, unquote_plus
 import uuid
 import hashlib
 from django.utils.translation import gettext_lazy as _
@@ -41,8 +41,15 @@ def _cast_timestamp(old):
             return None
 
 
+def url_only(full_url):
+    return full_url.replace('?%s' % urlparse(full_url).query, '')
+
+
 def validate_url(url, urls_string):
-    return url in [x for x in urls_string.replace('\r', '').split('\n') if x.strip()]
+    urls = [url_only(x)
+            for x in urls_string.replace('\r', '').split('\n')
+            if x.strip()]
+    return url_only(url) in urls
 
 
 class User(AbstractUser):
@@ -87,6 +94,8 @@ class User(AbstractUser):
     last_access_at = DateTimeField(_('last ad access'), null=True, blank=True)
 
     photo_url = CharField(_('photo'), max_length=250, null=True, blank=True)
+
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = _('User')
@@ -152,7 +161,7 @@ class Application(Model):
         verbose_name_plural = _('Aplicações')
 
     def __str__(self):
-        return "%s [%s]" % (self.nome, self.responsavel)
+        return "%s [%s]" % (self.name, self.owner)
 
     def save(self, *args, **kwargs):
         if self.client_id is None or self.client_id == '' or self.secret is None or self.secret == '':
@@ -178,9 +187,10 @@ class Application(Model):
         #                                                     _('allowed_web_origins'),
         #                                                      app.allowed_web_origins)
 
-        redirect_uri = urllib.parse.unquote_plus(redirect_uri)
+        redirect_uri = unquote_plus(redirect_uri)
+
         assert validate_url(redirect_uri, app.allowed_callback_urls), \
-            "'redirect_uri' not present on '%s'" % (_('allowed_callback_urls'))
+            "'redirect_uri' not present on '%s' - %s" % (_('allowed_callback_urls'), url_only(redirect_uri))
 
         expire_at = make_aware(datetime.datetime.now() + datetime.timedelta(minutes=10))
 

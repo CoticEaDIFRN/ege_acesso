@@ -20,13 +20,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from django.urls import path, include
 from django.conf import settings
 from django.views.generic.base import TemplateView
-from rest_framework import routers
-from .views import authorize_view, validate_view
-from .services import UserService
-
-
-router = routers.DefaultRouter()
-router.register('users', UserService)
+from .views import authorize_view, validate_view, secret_validate_view
+from .services import router
 
 
 app_name='ege_acesso'
@@ -34,6 +29,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name="ege_acesso/acesso_errado.html",
                                   extra_context={'perfil_url': settings.LOGIN_REDIRECT_URL})),
     path('api/v1/', include(router.urls)),
+    path('api/v1/secret/<str:secret>/', secret_validate_view),
     path('jwt/', TemplateView.as_view(template_name="ege_acesso/acesso_errado.html",
                                       extra_context={'perfil_url': settings.LOGIN_REDIRECT_URL}),
             ),

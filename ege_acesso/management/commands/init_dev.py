@@ -100,7 +100,7 @@ class Command(BaseCommand):
             client_id=env('EGE_ACESSO_JWT_CLIENT_ID'),
             secret=env('EGE_ACESSO_JWT_SECRET'),
             logo=None,
-            allowed_callback_urls='http://localhost/ege/perfil/jwt/complete/?original_next=/ege/perfil/',
+            allowed_callback_urls='http://localhost/ege/perfil/jwt/complete/\nhttp://localhost/ege/processoseletivo/jwt/complete/',
             allowed_web_origins='http://localhost/ege/perfil/jwt/login',
             allowed_logout_urls='http://localhost/ege/perfil/logout',
             expiration=600,

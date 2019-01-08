@@ -17,11 +17,25 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.routers import DefaultRouter
 from .models import User
 from .serializers import UserSerializer
 
 
-class UserService(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+class BaseModelService(ReadOnlyModelViewSet):
+    permission_classes = (IsAuthenticated, )
+
+
+class UserService(BaseModelService):
+    queryset = User.objects.filter(deleted__isnull=True)
     serializer_class = UserSerializer
+
+
+router = DefaultRouter()
+router.register('users', UserService)

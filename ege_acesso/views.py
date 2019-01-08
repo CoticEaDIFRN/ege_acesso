@@ -17,10 +17,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Application, TransactionToken
 
 
@@ -46,3 +46,8 @@ def validate_view(request):
     assert 'client_id' in request.GET, "empty client_id on get"
     assert 'auth_token' in request.GET, "empty auth_token on get"
     return HttpResponse(TransactionToken.validate(request.GET['client_id'], request.GET['auth_token']))
+
+
+def secret_validate_view(request, secret):
+    application = get_object_or_404(Application, owner__deleted__isnull=True, secret=secret)
+    return JsonResponse({"result": "OK", "client_id": application.client_id})

@@ -50,3 +50,14 @@ Desenvolver e implementar um Web Single Sign-On (W-SSO) e um Android Mobile Auth
 7.	Deverá permitir que o usuário tenha mais de uma função institucional atribuída a sua identidade e que cada um esteja associado a uma UOrg., com período de início e fim devidamente definidos.
 8.	Poderá usar como opções de W-SSO as implementações da lista Lista 2.
 
+
+```bash
+
+# using curl
+curl -X GET http://localhost/ege/acesso/api/v1/users/?format=json -H 'Authorization: Secret _EGE_ACESSO_JWT_SECRET_'
+
+
+# using httpie
+http --json http://localhost/ege/acesso/api/v1/users/  'Authorization:Secret _EGE_ACESSO_JWT_SECRET_'
+
+```
