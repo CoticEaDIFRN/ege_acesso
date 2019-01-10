@@ -1,1 +1,1 @@
-#-e ../ege_django_theme
+-e /libs/ege_theme
