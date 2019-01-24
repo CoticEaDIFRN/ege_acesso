@@ -24,15 +24,14 @@ from .views import authorize_view, validate_view, secret_validate_view
 from .services import router
 
 
-app_name='ege_acesso'
+app_name = 'ege_acesso'
 urlpatterns = [
     path('', TemplateView.as_view(template_name="ege_acesso/acesso_errado.html",
                                   extra_context={'perfil_url': settings.LOGIN_REDIRECT_URL})),
     path('api/v1/', include(router.urls)),
     path('api/v1/secret/<str:secret>/', secret_validate_view),
     path('jwt/', TemplateView.as_view(template_name="ege_acesso/acesso_errado.html",
-                                      extra_context={'perfil_url': settings.LOGIN_REDIRECT_URL}),
-            ),
+                                      extra_context={'perfil_url': settings.LOGIN_REDIRECT_URL})),
     path('jwt/authorize/', authorize_view, name='authorize_view'),
     path('jwt/validate/', validate_view, name='validate_view'),
 ]
