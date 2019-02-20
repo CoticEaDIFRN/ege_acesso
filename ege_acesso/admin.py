@@ -34,8 +34,11 @@ class UserAdmin(ModelAdmin):
         (_('E-Mails'), {'fields': ('email', 'enterprise_email', 'academic_email', 'scholar_email')}),
         (_('Dates'), {'fields': ('first_access', 'last_access', 'deleted')}),
         (_('Active Directory Dates'), {'fields': ('created_at', 'changed_at', 'password_set_at', 'last_access_at')}),
-        # (_('Foto'), {'fields': ('photo_url', )}),
         # (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')}),
+        (_('Photo'), {'fields': ('photo_url', 'valid_photo', 'pending_photo', 'photo_solicitation_at', 'photo_approved_at',
+                                 'photo_approved_by')}),
+        (_('Accessibility'), {'fields': ('theme_skin', 'font_size', 'legends', 'sign_language', 'screen_reader',
+                                         'is_special_needs_public', 'special_needs')}),
     )
     readonly_fields = []
     for fs in fieldsets:

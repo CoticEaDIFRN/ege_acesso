@@ -23,10 +23,13 @@ from urllib.parse import urlparse, unquote_plus
 import uuid
 import hashlib
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Model, ForeignKey, CASCADE
-from django.db.models import CharField, DateTimeField, BooleanField, TextField, FileField, PositiveIntegerField
+from django.db.models import Model, ForeignKey, ManyToManyField, CASCADE
+from django.db.models import CharField, DateTimeField, BooleanField, TextField, PositiveIntegerField, \
+                             SmallIntegerField, FileField, NullBooleanField
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import make_aware
+from python_brfied import to_choice
+import ege_theme
 
 
 def _cast_timestamp(old):
@@ -50,6 +53,23 @@ def validate_url(url, urls_string):
             for x in urls_string.replace('\r', '').split('\n')
             if x.strip()]
     return url_only(url) in urls
+
+
+class SpecialNeed(Model):
+    VISION = _('Visão')
+    AUDITION = _('Audição')
+    OTHERS = _('Outras')
+    CHOICES = to_choice(VISION, AUDITION, OTHERS)
+
+    name = CharField(_('name'), max_length=250, blank=False, null=False)
+    category = CharField(_('category'), max_length=250, choices=CHOICES, blank=False, null=False)
+
+    class Meta:
+        verbose_name = _('special need')
+        verbose_name_plural = _('special needs')
+
+    def __str__(self):
+        return "%s (%s)" % (self.name, self.category)
 
 
 class User(AbstractUser):
@@ -95,6 +115,24 @@ class User(AbstractUser):
 
     photo_url = CharField(_('photo'), max_length=250, null=True, blank=True)
 
+    biografy = TextField(_('biografy'), blank=True, null=True)
+    is_biografy_public = TextField(_('show to all'), blank=True, null=True)
+
+    valid_photo = FileField(_('valid photo'), null=True, blank=True)
+    pending_photo = FileField(_('pending photo'), null=True, blank=True)
+    photo_solicitation_at = DateTimeField(_('photo_solicitation_at'), blank=True, null=True)
+    photo_approved_at = DateTimeField(_('photo_approved at'), blank=True, null=True)
+    photo_approved_by = CharField(_('photo_approved by'), max_length=250, blank=True, null=True)
+
+    font_size = SmallIntegerField(_('font size'), blank=True, null=True)
+    theme_skin = CharField(_('theme skin'), choices=ege_theme.skins, max_length=250, blank=True, null=True)
+    legends = NullBooleanField(_('legends'), blank=True, null=True)
+    sign_language = NullBooleanField(_('sign language'), blank=True, null=True)
+    screen_reader = NullBooleanField(_('screen reader'), blank=True, null=True)
+
+    special_needs = ManyToManyField(SpecialNeed, verbose_name=_('special needs'))
+    is_special_needs_public = NullBooleanField(_('show to all'))
+
     REQUIRED_FIELDS = []
 
     class Meta:
@@ -110,8 +148,8 @@ class User(AbstractUser):
 
         self.created_at = _cast_timestamp(self.created_at)
         self.changed_at = _cast_timestamp(self.changed_at)
-        self.password_set_at = _cast_timestamp(self.password_set_at) # 02/10/2018 20:19
-        self.last_access_at = _cast_timestamp(self.last_access_at) # 24/12/2018 13:34
+        self.password_set_at = _cast_timestamp(self.password_set_at)
+        self.last_access_at = _cast_timestamp(self.last_access_at)
 
         self.email = self.email or self.enterprise_email or self.academic_email or self.scholar_email
 
@@ -266,6 +304,24 @@ class TransactionToken(Model):
             'last_access_at': "%s" % self.user.last_access_at,
 
             'photo_url': self.user.photo_url,
+
+            'biografy': self.user.biografy,
+            'is_biografy_public': self.user.is_biografy_public,
+
+            # 'valid_photo': self.user.valid_photo,
+            # 'pending_photo': self.user.pending_photo,
+            'photo_solicitation_at': self.user.photo_solicitation_at,
+            'photo_approved_at': self.user.photo_approved_at,
+            'photo_approved_by': self.user.photo_approved_by,
+
+            'font_size': self.user.font_size,
+            'theme_skin': self.user.theme_skin,
+            'legends': self.user.legends,
+            'sign_language': self.user.sign_language,
+            'screen_reader': self.user.screen_reader,
+
+            'special_needs': [x for x in self.user.special_needs.all()],
+            'is_special_needs_public': self.user.is_special_needs_public,
         }
         return jwt.encode(data, self.application.secret, algorithm='HS512')
 
