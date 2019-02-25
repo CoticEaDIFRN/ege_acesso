@@ -154,6 +154,7 @@ if USE_LDAP:
     LDAP_AUTH_RECEIVE_TIMEOUT = env_as_int('LDAP_AUTH_RECEIVE_TIMEOUT', 10)
     LDAP_AUTH_FORMAT_USERNAME = env('LDAP_AUTH_FORMAT_USERNAME',
                                     'django_python3_ldap.utils.format_username_active_directory')
+    LDAP_ACTIVE_VALUE = env('LDAP_ACTIVE_VALUE', '512')
 
 
 # Auth

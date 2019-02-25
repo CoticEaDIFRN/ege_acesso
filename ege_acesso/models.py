@@ -26,8 +26,10 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models import Model, ForeignKey, ManyToManyField, CASCADE
 from django.db.models import CharField, DateTimeField, BooleanField, TextField, PositiveIntegerField, \
                              SmallIntegerField, FileField, NullBooleanField
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import make_aware
+from django.conf import settings
 from python_brfied import to_choice
 import ege_theme
 
@@ -103,6 +105,7 @@ class User(AbstractUser):
     enterprise_email = CharField(_('enterprise email'), max_length=250, null=True, blank=True)
     academic_email = CharField(_('academic email'), max_length=250, null=True, blank=True)
     scholar_email = CharField(_('scholar email'), max_length=250, null=True, blank=True)
+    eduroam = CharField(_('eduroam'), max_length=250, null=True, blank=True)
 
     first_access = DateTimeField(_('date joined'), auto_now_add=True)
     last_access = DateTimeField(_('last access'), auto_now=True)
@@ -112,6 +115,7 @@ class User(AbstractUser):
     changed_at = DateTimeField(_('changed at'), null=True, blank=True)
     password_set_at = DateTimeField(_('password set at'), null=True, blank=True)
     last_access_at = DateTimeField(_('last ad access'), null=True, blank=True)
+    member_of = ArrayField(CharField(_('member_of'), max_length=1000), null=True, blank=True)
 
     photo_url = CharField(_('photo'), max_length=250, null=True, blank=True)
 
@@ -144,7 +148,7 @@ class User(AbstractUser):
         return self.printing_name
 
     def save(self, *args, **kwargs):
-        self.is_active = 'Ativo' == self.active
+        self.is_active = settings.LDAP_ACTIVE_VALUE == self.active
 
         self.created_at = _cast_timestamp(self.created_at)
         self.changed_at = _cast_timestamp(self.changed_at)
