@@ -22,12 +22,15 @@ from django.conf import settings
 from django.views.generic.base import TemplateView
 from .views import authorize_view, validate_view, secret_validate_view
 from .services import router
+from django.views.generic import RedirectView
 
 
 app_name = 'ege_acesso'
 urlpatterns = [
-    path('', TemplateView.as_view(template_name="ege_acesso/acesso_errado.html",
-                                  extra_context={'perfil_url': settings.LOGIN_REDIRECT_URL})),
+    # path('', TemplateView.as_view(template_name="ege_acesso/acesso_errado.html",
+    #                               extra_context={'perfil_url': settings.LOGIN_REDIRECT_URL})),
+    path('', RedirectView.as_view(url="..")),
+    path('', RedirectView.as_view(url=settings.URL_PATH_PREFIX)),
     path('api/v1/', include(router.urls)),
     path('api/v1/secret/<str:secret>/', secret_validate_view),
     path('jwt/', TemplateView.as_view(template_name="ege_acesso/acesso_errado.html",
