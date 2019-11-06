@@ -148,7 +148,7 @@ class User(AbstractUser):
         return self.printing_name
 
     def save(self, *args, **kwargs):
-        self.is_active = settings.LDAP_ACTIVE_VALUE == self.active
+        self.is_active = settings.LDAP_ACTIVE_VALUE == self.active if settings.USE_LDAP else True
 
         self.created_at = _cast_timestamp(self.created_at)
         self.changed_at = _cast_timestamp(self.changed_at)
