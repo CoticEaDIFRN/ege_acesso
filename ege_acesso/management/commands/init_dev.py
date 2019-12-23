@@ -18,7 +18,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import datetime
-from python_brfied import env
+from sc4py.env import env
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from ...models import User, Application

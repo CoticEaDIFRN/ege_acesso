@@ -30,7 +30,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import make_aware
 from django.conf import settings
-from python_brfied import to_choice
+from sc4py.choice import to_choice
 import ege_theme
 
 
