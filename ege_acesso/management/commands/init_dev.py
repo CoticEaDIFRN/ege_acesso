@@ -28,8 +28,8 @@ from django.utils.timezone import make_aware
 class Command(BaseCommand):
     help="My shiny new management command."
 
-    # def add_arguments(self, parser):
-    #     parser.add_argument('sample', nargs='+')
+    def add_arguments(self, parser):
+        parser.add_argument('myip', nargs='+')
 
     def handle(self, *args, **options):
         if not settings.DEBUG:
@@ -85,27 +85,35 @@ class Command(BaseCommand):
             print("superuser dont exists")
             return
 
-        aa = Application.objects.filter(client_id=env('EGE_ACESSO_JWT_CLIENT_ID'),
-                                        secret=env('EGE_ACESSO_JWT_SECRET')).first()
+        allowed_callback_urls = ''
+        allowed_web_origins = ''
+        allowed_logout_urls = ''
+        for host in ['ege', 'localhost'] + options['myip']:
+            for service in ['acesso', 'dashboard', 'perfil']:
+                allowed_callback_urls += 'http://%s/ege/%s/jwt/complete/\n' % (host, service)
+                allowed_web_origins += 'http://%s/ege/%s/jwt/login/\n' % (host, service)
+                allowed_logout_urls += 'http://%s/ege/%s/jwt/logout/\n' % (host, service)
 
-        if aa is not None:
-            print("application always exists")
-            return
+        app = Application.objects.filter(client_id=env('EGE_ACESSO_JWT_CLIENT_ID'),
+                                         secret=env('EGE_ACESSO_JWT_SECRET')).first()
+        if app is None:
+            print("creating app...\n")
+            app = Application()
+        else:
+            print("application always exists\n")
 
-        print("creating app...\n")
-        app = Application.objects.create(
-            owner=su,
-            name='ege_acesso',
-            description='some description',
-            client_id=env('EGE_ACESSO_JWT_CLIENT_ID'),
-            secret=env('EGE_ACESSO_JWT_SECRET'),
-            logo=None,
-            allowed_callback_urls='http://localhost/ege/perfil/jwt/complete/\nhttp://localhost/ege/processoseletivo/jwt/complete/',
-            allowed_web_origins='http://localhost/ege/perfil/jwt/login',
-            allowed_logout_urls='http://localhost/ege/perfil/logout',
-            expiration=600,
-            created_at=datetime.datetime.now(),
-            deleted_at=None)
+        app.owner = su
+        app.name = 'ege_acesso'
+        app.description = 'some description'
+        app.client_id = env('EGE_ACESSO_JWT_CLIENT_ID')
+        app.secret = env('EGE_ACESSO_JWT_SECRET')
+        app.logo = None
+        app.allowed_callback_urls = allowed_callback_urls
+        app.allowed_web_origins = allowed_web_origins
+        app.allowed_logout_urls = allowed_logout_urls
+        app.expiration = 600
+        app.created_at = datetime.datetime.now()
+        app.deleted_at = None
         app.save()
 
         print("application client_id=%s" % env('EGE_ACESSO_JWT_CLIENT_ID'))
