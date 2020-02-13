@@ -1,4 +1,3 @@
-suap_ead_
 from django.contrib.admin import register, ModelAdmin, TabularInline
 from django.utils.translation import gettext_lazy as _
 from .models import User, Application

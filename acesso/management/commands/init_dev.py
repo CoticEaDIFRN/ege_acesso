@@ -1,4 +1,3 @@
-suap_ead_
 import datetime
 from sc4py.env import env
 from django.core.management.base import BaseCommand
