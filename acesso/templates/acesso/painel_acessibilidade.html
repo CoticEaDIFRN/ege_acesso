@@ -1,4 +1,4 @@
-{% extends "ege_perfil/index.html" %}
+{% extends "suap_ead/index.html" %}
 {% load i18n static %}
 
 {% block title %}Acessibilidade{% endblock %}
@@ -8,14 +8,14 @@
 {% endblock %}
 
 {% block page-title %}
-    <a href="/ege/perfil/acessibilidade">Configurações de acessibilidade</a>
+    <a href="/sead/perfil/acessibilidade">Configurações de acessibilidade</a>
 {% endblock %}
 
 {% block user_menu_options %}
     <h5 class="p-4 text-center">
-        {% trans "Welcome, " %}<span class="text-bold">{% firstof ege.user.social_name user.get_username %}!</span>
+        {% trans "Welcome, " %}<span class="text-bold">{% firstof sead.user.social_name user.get_username %}!</span>
     </h5>
-    <a href="/ege/perfil/">Perfil</a>
+    <a href="/sead/perfil/">Perfil</a>
 {% endblock %}
 
 {% block left_menu %}{% endblock %}

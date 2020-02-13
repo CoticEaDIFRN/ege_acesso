@@ -42,15 +42,15 @@ def secret_validate_view(request, secret):
 @login_required
 def perfil_index(request):
     if request.COOKIES.get('hide_config'):
-        return render(request, template_name='ege_perfil/index.html', context={'login_url': settings.LOGIN_URL})
+        return render(request, template_name='perfil/index.html', context={'login_url': settings.LOGIN_URL})
     else:
-        return HttpResponseRedirect('/ege/perfil/acessibilidade')
+        return HttpResponseRedirect('/sead/perfil/acessibilidade')
 
 
 class AcessibilidadeService(View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, template_name='ege_perfil/painel_acessibilidade.html')
+        return render(request, template_name='perfil/painel_acessibilidade.html')
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):

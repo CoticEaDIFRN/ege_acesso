@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                 ('photo_approved_at', models.DateTimeField(blank=True, null=True, verbose_name='photo_approved at')),
                 ('photo_approved_by', models.CharField(blank=True, max_length=250, null=True, verbose_name='photo_approved by')),
                 ('font_size', models.SmallIntegerField(blank=True, null=True, verbose_name='font size')),
-                ('theme_skin', models.CharField(blank=True, choices=[('ava_ead_default', 'AVA padrão'), ('ava_ead_alternative', 'AVA alternativo'), ('suap_ead_default', 'EGE padrão'), ('suap_ead_alternative', 'EGE alternativo'), ('highcontrast', 'Alto contraste'), ('dark', 'Dark'), ('contrast', 'Contraste'), ('golden', 'Dourado'), ('purple', 'Púrpura'), ('navy', 'Marinha'), ('coral', 'Coral')], max_length=250, null=True, verbose_name='theme skin')),
+                ('theme_skin', models.CharField(blank=True, choices=[('ava_ead_default', 'AVA-EaD padrão'), ('ava_ead_alternative', 'AVA-EaD alternativo'), ('suap_ead_default', 'SUAP-EaD padrão'), ('suap_ead_alternative', 'SUAP-EaD alternativo'), ('highcontrast', 'Alto contraste'), ('dark', 'Dark'), ('contrast', 'Contraste'), ('golden', 'Dourado'), ('purple', 'Púrpura'), ('navy', 'Marinha'), ('coral', 'Coral')], max_length=250, null=True, verbose_name='theme skin')),
                 ('legends', models.NullBooleanField(verbose_name='legends')),
                 ('sign_language', models.NullBooleanField(verbose_name='sign language')),
                 ('screen_reader', models.NullBooleanField(verbose_name='screen reader')),

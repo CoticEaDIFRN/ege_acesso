@@ -43,7 +43,7 @@ const data = new Vue({
                     // this.create_cookie('recurso_bvisao', this.rec_baixa_visao);
                     // this.create_cookie('recurso_leg', this.rec_legendagem);
                     // this.create_cookie('recurso_cfcor', this.rec_config_cor);
-                    // window.location.href = "/ege/perfil/";
+                    // window.location.href = "/sead/perfil/";
                     break;
                 // default:
                 //     this.painel_1 = !this.painel_1;

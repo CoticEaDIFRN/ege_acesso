@@ -1,16 +1,16 @@
-{% extends "ege_theme/base.html" %}
+{% extends "suap_ead/base.html" %}
 {% load i18n static %}
 
 {% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">{% endblock %}
 
 {% block title %}Perfil{% endblock %}
-{% block page-title %}<a href="{% url 'admin:index' %}">Perfil de {{ ege.user.presentation_name|safe }}</a>{% endblock %}
+{% block page-title %}<a href="{% url 'admin:index' %}">Perfil de {{ sead.user.presentation_name|safe }}</a>{% endblock %}
 
 {% block user_menu_options %}
     <h5 class="p-4 text-center">
-        {% trans "Welcome" %}, <span class="text-bold">{% firstof ege.user.social_name user.get_username %}!</span>
+        {% trans "Welcome" %}, <span class="text-bold">{% firstof sead.user.social_name user.get_username %}!</span>
     </h5>
-    <a href="/ege/perfil/acessibilidade">Acessibilidade</a>
+    <a href="/sead/perfil/acessibilidade">Acessibilidade</a>
     <!--<div id="edit">-->
         <!--<button_edit></button_edit>-->
     <!--</div>-->
@@ -19,7 +19,7 @@
 {% block left_menu %}{% endblock %}
 
 {% block content %}
-    <div id="perfil" data-content="{{ ege.user.username }}">
+    <div id="perfil" data-content="{{ sead.user.username }}">
         <v-app id="inspire">
             <v-content style="padding:0">
               <v-container fluid fill-height style="padding:0">
@@ -33,19 +33,19 @@
                     <v-card class="elevation-12" style="max-width:85%;width:50em;border-top:2px solid LightGray">
                       <v-card-title primary-title class="mt-5">
                         <div style="width:100%">
-                          <h3 dark class="headline mb-0 m-4">{{ege.user.presentation_name}}</h3>
+                          <h3 dark class="headline mb-0 m-4">{{sead.user.presentation_name}}</h3>
                           <div class="d-flex flex-column flex-md-row align-baseline align-md-center justify-content-around mt-3 text-left text-md-center ml-3 ml-md-0">
                             <div>
                               <p class="topic">Matrícula</p>
                               <p>0000.0000.000-00</p>
                             </div>
-                            <div v-if="{{ege.user.polo}} != null">
+                            <div v-if="{{sead.user.polo}} != null">
                               <p class="topic">Pólo</p>
-                              <p>{{ege.user.polo}}</p>
+                              <p>{{sead.user.polo}}</p>
                             </div>
-                            <div v-if="{{ege.user.campus}} != null">
+                            <div v-if="{{sead.user.campus}} != null">
                               <p class="topic">Campus</p>
-                              <p>{{ege.user.campus}}</p>
+                              <p>{{sead.user.campus}}</p>
                             </div>
                           </div>
                         </div>

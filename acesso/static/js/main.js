@@ -67,12 +67,12 @@ const page = new Vue({
         // this.hide_conf = (rec === 'true');
         console.log(document.cookie, rec, rec2);
 
-        let ege_user = JSON.parse(document.getElementById('perfil').dataset.content);
-        console.log(ege_user);
+        let sead_user = JSON.parse(document.getElementById('perfil').dataset.content);
+        console.log(sead_user);
 
         axios({
           method: 'get',
-          url: `../acesso/api/v1/users/${ege_user}`
+          url: `../acesso/api/v1/users/${sead_user}`
         })
         .then(response => {
             this.biografy = response.data.biografy;
@@ -122,14 +122,14 @@ const page = new Vue({
         edit_recursos: function () {
             // axios({
             //   method: 'post',
-            //   url: '/ege/perfil/acessibilidade',
+            //   url: '/sead/perfil/acessibilidade',
             //   data: {painel_1: false}
             // })
             // .then(response => {
             //       console.log(response)
             //   })
             //     .catch(error => console.log('put error:', error))
-            window.location.href = "/ege/perfil/acessibilidade?painel_1=false"
+            window.location.href = "/sead/perfil/acessibilidade?painel_1=false"
         }
     }
 });
