@@ -1,0 +1,282 @@
+{% extends "ege_theme/base.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">{% endblock %}
+
+{% block title %}Perfil{% endblock %}
+{% block page-title %}<a href="{% url 'admin:index' %}">Perfil de {{ ege.user.presentation_name|safe }}</a>{% endblock %}
+
+{% block user_menu_options %}
+    <h5 class="p-4 text-center">
+        {% trans "Welcome" %}, <span class="text-bold">{% firstof ege.user.social_name user.get_username %}!</span>
+    </h5>
+    <a href="/ege/perfil/acessibilidade">Acessibilidade</a>
+    <!--<div id="edit">-->
+        <!--<button_edit></button_edit>-->
+    <!--</div>-->
+{% endblock %}
+
+{% block left_menu %}{% endblock %}
+
+{% block content %}
+    <div id="perfil" data-content="{{ ege.user.username }}">
+        <v-app id="inspire">
+            <v-content style="padding:0">
+              <v-container fluid fill-height style="padding:0">
+                <v-layout align-center justify-center column>
+                  <v-flex d-flex align-center style="flex-direction:column">
+                    <img
+                      :src="photo_user"
+                      class="elevation-6"
+                      style="background-color:#fff; z-index:1; position:relative; width: 15%; top: 5em; border-radius:50%; flex:0 !important"
+                    >
+                    <v-card class="elevation-12" style="max-width:85%;width:50em;border-top:2px solid LightGray">
+                      <v-card-title primary-title class="mt-5">
+                        <div style="width:100%">
+                          <h3 dark class="headline mb-0 m-4">{{ege.user.presentation_name}}</h3>
+                          <div class="d-flex flex-column flex-md-row align-baseline align-md-center justify-content-around mt-3 text-left text-md-center ml-3 ml-md-0">
+                            <div>
+                              <p class="topic">Matrícula</p>
+                              <p>0000.0000.000-00</p>
+                            </div>
+                            <div v-if="{{ege.user.polo}} != null">
+                              <p class="topic">Pólo</p>
+                              <p>{{ege.user.polo}}</p>
+                            </div>
+                            <div v-if="{{ege.user.campus}} != null">
+                              <p class="topic">Campus</p>
+                              <p>{{ege.user.campus}}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <v-divider style="margin:0 25px"></v-divider>
+
+                        <!--BIOGRAFIA-->
+                        <div style="width:100%">
+                          <div class="d-flex row align-center m-3">
+                            <div class="text-justify">
+                                <v-layout align-center>
+                                    <p class="topic">Biografia</p>
+                                    <v-dialog v-model="dialog_bio" persistent max-width="600px" v-if="edit_buttons">
+                                        <v-btn slot="activator" outline fab color="blue" style="width: 2.2em;height: 2.2em">
+                                            <v-icon>edit</v-icon>
+                                        </v-btn>
+                                        <v-card>
+                                            <v-card-title>
+                                              <span class="headline">Biografia</span>
+                                            </v-card-title>
+                                            <v-card-text>
+                                              <v-container grid-list-md>
+                                                <v-layout wrap>
+                                                  <v-flex>
+                                                    <v-textarea
+                                                      id="bio"
+                                                      solo
+                                                      full-width
+                                                      v-model="biografy"
+                                                    ></v-textarea>
+                                                  </v-flex>
+                                                </v-layout>
+                                              </v-container>
+                                            </v-card-text>
+                                            <v-card-actions>
+                                              <v-spacer></v-spacer>
+                                              <v-btn color="blue darken-1" flat @click="dialog_bio = false">FECHAR</v-btn>
+                                              <v-btn color="blue darken-1" flat @click="save_bio">SALVAR</v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                                </v-layout>
+                                <p>${biografy}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <v-divider style="margin:0 25px"></v-divider>
+
+                        <!--EMAIL-->
+                        <div style="width:100%">
+                          <div class="d-flex row align-center justify-space-between m-3">
+                            <div class="text-left w-100">
+                                <v-layout align-baseline justify-space-between>
+                                    <div class="d-flex align-center">
+                                        <p class="topic">E-mail</p>
+                                        <v-dialog v-model="dialog_email" persistent max-width="600px" v-if="edit_buttons">
+                                            <v-btn slot="activator" outline fab color="blue" style="width: 2.2em;height: 2.2em">
+                                                <v-icon>edit</v-icon>
+                                            </v-btn>
+                                            <v-card>
+                                                <v-card-title>
+                                                  <span class="headline">Email</span>
+                                                </v-card-title>
+                                                <v-card-text>
+                                                  <v-container grid-list-md>
+                                                    <v-layout wrap>
+                                                      <v-flex xs12 v-for="email in email">
+                                                        <v-text-field
+                                                                :id="`${ email.tipo }`"
+                                                                :label="`${ email.tipo }`"
+                                                                :value="`${ email.data }`"
+                                                        ></v-text-field>
+                                                      </v-flex>
+                                                    </v-layout>
+                                                  </v-container>
+                                                </v-card-text>
+                                                <v-card-actions>
+                                                  <v-spacer></v-spacer>
+                                                  <v-btn color="blue darken-1" flat @click="dialog_email = false">FECHAR</v-btn>
+                                                  <v-btn color="blue darken-1" flat @click="save_email">SALVAR</v-btn>
+                                                </v-card-actions>
+                                            </v-card>
+                                        </v-dialog>
+                                    </div>
+                                    <div class="text-left">
+                                        <div><p class="mb-0">Exibir para todos</p></div>
+                                        <v-layout align-center justify-space-around>
+                                            <p class="m-0 mr-2">Não</p>
+                                            <v-switch v-model="switch_email"></v-switch>
+                                            <p class="m-0">Sim</p>
+                                        </v-layout>
+                                    </div>
+
+                                </v-layout>
+                                <p v-for="email in email">Email ${ email.tipo }: ${ email.data }</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <v-divider style="margin:0 25px"></v-divider>
+
+                        <!--RECURSO DE ACESSIBILIDADE-->
+                        <div class="text-right" style="width:100%">
+                          <div class="m-3">
+                              <div class="d-flex row justify-space-between ">
+                                  <div class="text-left">
+                                      <div class="row align-items-center ml-3">
+                                          <p class="topic">Recurso de acessibilidade</p>
+                                      </div>
+                                      <div v-if="recursos" class="d-flex row justify-space-between m-3 mb-4">
+                                          <div class="text-left">
+                                              <p v-for="recurso in recursos" class="m-0">${recurso}</p>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <v-btn round outline color="primary" style="height: 2em" v-on:click="edit_recursos">RECONFIGURAR ACESSIBILIDADE</v-btn>
+                          </div>
+                        </div>
+
+                        <v-divider style="margin:0 25px"></v-divider>
+
+                        <!--NECESSIDADES ESPECIAIS-->
+                        <div class="text-right" style="width:100%">
+                          <div class="m-3">
+                              <div class="d-flex row justify-space-between ">
+                                  <div class="text-left">
+                                      <div class="row align-items-center ml-3 mb-3">
+                                          <p class="topic">Necessidades especiais</p>
+                                          <v-btn outline fab color="blue" style="width: 2.2em;height: 2.2em" v-on:click="options_needs=!options_needs" v-if="edit_buttons">
+                                              <v-icon>edit</v-icon>
+                                          </v-btn>
+                                      </div>
+                                      <div v-if="`${selected}`" class="d-flex row justify-space-between m-3 mb-4">
+                                          <div class="text-left">
+                                              <p v-for="sel in selected" class="m-0">${sel}</p>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="text-left" v-if="`${selected}`">
+                                    <div><p class="mb-0">Exibir para todos</p></div>
+                                    <v-layout align-center justify-space-around>
+                                        <p class="m-0 mr-2">Não</p>
+                                        <v-switch v-model="switch_needs"></v-switch>
+                                        <p class="m-0">Sim</p>
+                                    </v-layout>
+                                  </div>
+                              </div>
+                              <div id="opt_needs" v-if="options_needs">
+
+                                  <!--VISÁO-->
+                                  <h5 class="text-left">Visão</h5>
+                                  <div class="row mt-2">
+                                      <div class="col-5">
+                                          <v-checkbox v-model="selected" v-for="(spneed, index) in special_needs_visao" :label="`${spneed}`" :value="`${spneed}`" v-if="`${index}` < `${special_needs_visao.length/2}`" class="align-center mt-0"></v-checkbox>
+                                      </div>
+                                      <div class="col-5">
+                                          <v-checkbox v-model="selected" v-for="(spneed, index) in special_needs_visao" :label="`${spneed}`" :value="`${spneed}`" v-if="`${index}` >= `${special_needs_visao.length/2}`" class="align-center mt-0"></v-checkbox>
+                                      </div>
+                                  </div>
+
+                                  <!--AUDIÇÃO-->
+                                  <h5 class="text-left">Audição</h5>
+                                  <div class="row mt-2">
+                                      <div class="col-5">
+                                          <v-checkbox v-model="selected" v-for="(spneed, index) in special_needs_audicao" :label="`${spneed}`" :value="`${spneed}`" v-if="`${index}` < `${special_needs_audicao.length/2}`" class="align-center mt-0"></v-checkbox>
+                                      </div>
+                                      <div class="col-5">
+                                          <v-checkbox v-model="selected" v-for="(spneed, index) in special_needs_audicao" :label="`${spneed}`" :value="`${spneed}`" v-if="`${index}` >= `${special_needs_audicao.length/2}`" class="align-center mt-0"></v-checkbox>
+                                      </div>
+                                  </div>
+
+                                  <!--OUTRAS-->
+                                  <h5 class="text-left">Outras</h5>
+                                  <div class="row mt-2">
+                                      <div class="col-5">
+                                          <v-checkbox v-model="selected" v-for="(spneed, index) in special_needs_outras" :label="`${spneed}`" :value="`${spneed}`" v-if="`${index}` < `${special_needs_outras.length/2}`" class="align-center mt-0"></v-checkbox>
+                                      </div>
+                                      <div class="col-5">
+                                          <v-checkbox v-model="selected" v-for="(spneed, index) in special_needs_outras" :label="`${spneed}`" :value="`${spneed}`" v-if="`${index}` >= `${special_needs_outras.length/2}`" class="align-center mt-0"></v-checkbox>
+                                      </div>
+                                  </div>
+                                  <div class="row justify-content-end">
+                                      <v-btn round outline fab color="primary" style="width: 5em; height: 2em">SALVAR</v-btn>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+
+                        <v-divider style="margin:0 25px"></v-divider>
+
+                        <!--CURSOS-->
+                        <div style="width:100%">
+                          <div class="d-flex row align-center m-3">
+                            <div class="text-left w-100">
+                              <p class="topic">Cursos inscritos</p>
+
+                              <v-card class="mt-2" v-for="(curso, index) in cursos">
+                                <v-card-title>
+                                  <div style="width:100%">
+                                    <p dark>${ curso.nome }</p>
+                                    <div class="d-flex row align-center ml-1">
+                                      <div>
+                                        <span style="color:grey">${ curso.codigo }</span>
+                                      </div>
+                                      <div v-if="curso.media" class="ml-3">
+                                        <span style="color:grey">Média Final: ${ curso.media }</span>
+                                      </div>
+                                    </div>
+                                    <v-progress-linear
+                                      v-model="curso.aproveitamento"
+                                      :color="color_bar[index]"
+                                    ></v-progress-linear>
+                                  </div>
+                                </v-card-title>
+                              </v-card>
+                            </div>
+                          </div>
+                        </div>
+                      </v-card-title>
+                    </v-card>
+                  </v-flex>
+
+                </v-layout>
+              </v-container>
+            </v-content>
+          </v-app>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

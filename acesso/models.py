@@ -5,8 +5,7 @@ import uuid
 import hashlib
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Model, ForeignKey, ManyToManyField, CASCADE
-from django.db.models import CharField, DateTimeField, BooleanField, TextField, PositiveIntegerField, \
-                             SmallIntegerField, FileField, NullBooleanField
+from django.db.models import CharField, DateTimeField, BooleanField, TextField, PositiveIntegerField, SmallIntegerField, FileField, NullBooleanField
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import make_aware

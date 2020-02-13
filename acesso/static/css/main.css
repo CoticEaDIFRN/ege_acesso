@@ -1,0 +1,33 @@
+.mi_card {
+    margin: 1.5rem !important;
+    padding: 1rem;
+}
+
+.mi_card > h3,
+.mi_card > p {
+    text-align: left;
+}
+
+.mi_card > p {
+    font-size: 16px;
+}
+
+.libras img {
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 1024px) {
+    .card_list {
+        display: grid;
+        grid-template-areas:
+            'ledor libras'
+            'nada libras';
+        grid-gap: 10px;
+        padding: 10px;
+    }
+
+    .ledor { grid-area: ledor; }
+    .libras { grid-area: libras; }
+    .nada { grid-area: nada; }
+}

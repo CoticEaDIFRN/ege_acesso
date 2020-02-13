@@ -1,0 +1,102 @@
+{% extends "ege_perfil/index.html" %}
+{% load i18n static %}
+
+{% block title %}Acessibilidade{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block page-title %}
+    <a href="/ege/perfil/acessibilidade">Configurações de acessibilidade</a>
+{% endblock %}
+
+{% block user_menu_options %}
+    <h5 class="p-4 text-center">
+        {% trans "Welcome, " %}<span class="text-bold">{% firstof ege.user.social_name user.get_username %}!</span>
+    </h5>
+    <a href="/ege/perfil/">Perfil</a>
+{% endblock %}
+
+{% block left_menu %}{% endblock %}
+
+{% block content %}
+    <div id="acessibilidade">
+        <v-app id="inspire">
+            <h2 class="text-left" style="margin: 25px">Configurações de acessibilidade para necessidades especiais</h2>
+            <div class="mi_card" style="margin: 1.5rem !important; padding: 1rem;">
+                <h3>Informação</h3>
+                <p style="font-size: 16px; text-align: left;">Esta página é dedicada a identificar que tipo de necessidade especial você porta, e assim configurar nossos ambientes virtuais para melhor lhe atender quanto a estas necessidades. Para configurar serão feitas algumas perguntas a você e ao final as configurações serão salvas. Não se preocupe, estas configurações poderão ser alteradas a qualquer momento, para isto você poderá acessá-las no seu perfil, disponível no canto superior direito, no 'menu usuário'.</p>
+            </div>
+            <div class="card_list">
+                <div class="elevation-12 m-2 mi_card ledor" v-on:click="avancar('ledor')">
+                    <h3>Ledor de tela</h3>
+                    <p>Se você utiliza ledor de tela, por favor, selecione esta opção para avançar.</p>
+                </div>
+                <div class="elevation-12 m-2 mi_card libras" v-on:click="avancar('libras')"><img src="https://media.giphy.com/media/kefcID8P0rsMIWOGoQ/giphy.gif"/></div>
+                <div class="elevation-12 m-2 mi_card nada" v-on:click="avancar('outro')">
+                    <h3>Possui outra ou nenhuma necessidade especial</h3>
+                    <p>Se você não precisar de nenhuma dessas opções, selecione esta opção para avançar.</p>
+                </div>  
+            </div>            
+            <v-content style="padding:0">
+              <v-container fluid style="padding:0">
+                <v-layout align-center justify-  column>
+                  <!--PAINEL OUTRAS NECESSIDADES-->
+                  <v-flex class="w-100 justify-content-end mt-5" v-if="!painel_1">
+                      <div class="row">
+                          <div class="col">
+                              <!--BAIXA VISÃO-->
+                              <v-card class="elevation-12 m-2 card_check" style="cursor: auto">
+                                  <v-card-title primary-title>
+                                      <div class="d-flex align-items-center">
+                                          <v-checkbox v-model="rec_baixa_visao" class="m-0"></v-checkbox>
+                                          <h3 class="headline w-100 text-left">Baixa visão</h3>
+                                      </div>
+                                      <p class="text-left">Clique aqui se tiver baixa visão.</p>
+                                  </v-card-title>
+                              </v-card>
+                          </div>
+                          <div class="col">
+                              <!--LEGENDAGEM-->
+                              <v-card class="elevation-12 m-2 card_check" style="cursor: auto">
+                                  <v-card-title primary-title>
+                                      <div class="d-flex align-items-center">
+                                          <v-checkbox v-model="rec_legendagem" class="m-0"></v-checkbox>
+                                          <h3 class="headline w-100 text-left">Legendagem</h3>
+                                      </div>
+                                      <p class="text-left">Clique aqui se precisar deste recurso.</p>
+                                  </v-card-title>
+                              </v-card>
+                          </div>
+                          <div class="col">
+                              <!--CONFIGURAÇÕES DE COR-->
+                              <v-card class="elevation-12 m-2 card_check" style="cursor: auto">
+                                  <v-card-title primary-title>
+                                      <div class="d-flex align-items-center">
+                                          <v-checkbox v-model="rec_config_cor" class="m-0"></v-checkbox>
+                                          <h3 class="headline w-100 text-left">Configurações de cor</h3>
+                                      </div>
+                                      <p class="text-left">Clique aqui se possuir algum tipo de daltonismo, fotofobia ou desconforto com alguma cor.</p>
+                                  </v-card-title>
+                              </v-card>
+                          </div>
+                      </div>
+                      <div class="row justify-space-between align-items-baseline m-2">
+                          <p>Não selecione nenhuma opção se não precisar ou desejar qualquer uma delas.</p>
+                          <div>
+                              <v-btn round color="primary" dark style="margin-right: 15px" v-on:click="painel_1=!painel_1">Voltar</v-btn>
+                              <v-btn round color="primary" dark style="margin-right: 15px" v-on:click="avancar('perfil')">Avançar</v-btn>
+                          </div>
+                      </div>
+                  </v-flex>
+                </v-layout>
+              </v-container>
+            </v-content>
+        </v-app>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/conf_acessibilidade.js' %}"></script>
+{% endblock %}
