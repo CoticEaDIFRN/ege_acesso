@@ -1,22 +1,4 @@
-"""
-The MIT License (MIT)
-
-Copyright 2015 Umbrella Tech.
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+suap_ead_
 import datetime
 from sc4py.env import env
 from django.core.management.base import BaseCommand
@@ -88,14 +70,14 @@ class Command(BaseCommand):
         allowed_callback_urls = ''
         allowed_web_origins = ''
         allowed_logout_urls = ''
-        for host in ['ege', 'localhost'] + options['myip']:
+        for host in ['sead', 'localhost'] + options['myip']:
             for service in ['acesso', 'dashboard', 'perfil']:
-                allowed_callback_urls += 'http://%s/ege/%s/jwt/complete/\n' % (host, service)
-                allowed_web_origins += 'http://%s/ege/%s/jwt/login/\n' % (host, service)
-                allowed_logout_urls += 'http://%s/ege/%s/jwt/logout/\n' % (host, service)
+                allowed_callback_urls += 'http://%s/sead/%s/jwt/complete/\n' % (host, service)
+                allowed_web_origins += 'http://%s/sead/%s/jwt/login/\n' % (host, service)
+                allowed_logout_urls += 'http://%s/sead/%s/jwt/logout/\n' % (host, service)
 
-        app = Application.objects.filter(client_id=env('EGE_ACESSO_JWT_CLIENT_ID'),
-                                         secret=env('EGE_ACESSO_JWT_SECRET')).first()
+        app = Application.objects.filter(client_id=env('SUAP_EAD_ACESSO_JWT_CLIENT_ID'),
+                                         secret=env('SUAP_EAD_ACESSO_JWT_SECRET')).first()
         if app is None:
             print("creating app...\n")
             app = Application()
@@ -103,10 +85,10 @@ class Command(BaseCommand):
             print("application always exists\n")
 
         app.owner = su
-        app.name = 'ege_acesso'
+        app.name = 'SUAP_EAD_acesso'
         app.description = 'some description'
-        app.client_id = env('EGE_ACESSO_JWT_CLIENT_ID')
-        app.secret = env('EGE_ACESSO_JWT_SECRET')
+        app.client_id = env('SUAP_EAD_ACESSO_JWT_CLIENT_ID')
+        app.secret = env('SUAP_EAD_ACESSO_JWT_SECRET')
         app.logo = None
         app.allowed_callback_urls = allowed_callback_urls
         app.allowed_web_origins = allowed_web_origins
@@ -116,6 +98,6 @@ class Command(BaseCommand):
         app.deleted_at = None
         app.save()
 
-        print("application client_id=%s" % env('EGE_ACESSO_JWT_CLIENT_ID'))
-        print("application secret=%s" % env('EGE_ACESSO_JWT_SECRET'))
+        print("application client_id=%s" % env('SUAP_EAD_ACESSO_JWT_CLIENT_ID'))
+        print("application secret=%s" % env('SUAP_EAD_ACESSO_JWT_SECRET'))
         print("\nDone.")

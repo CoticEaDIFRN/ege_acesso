@@ -1,1 +1,1 @@
-default_app_config = 'ege_acesso.apps.EgeAcessoConfig'
+default_app_config = 'acesso.apps.EgeAcessoConfig'

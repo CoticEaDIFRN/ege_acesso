@@ -1,22 +1,3 @@
-"""
-The MIT License (MIT)
-
-Copyright 2015 Umbrella Tech.
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
 import datetime
 import jwt
 from urllib.parse import urlparse, unquote_plus
@@ -31,7 +12,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import make_aware
 from django.conf import settings
 from sc4py.choice import to_choice
-import ege_theme
+import suap_ead
 
 
 def _cast_timestamp(old):
@@ -129,7 +110,7 @@ class User(AbstractUser):
     photo_approved_by = CharField(_('photo_approved by'), max_length=250, blank=True, null=True)
 
     font_size = SmallIntegerField(_('font size'), blank=True, null=True)
-    theme_skin = CharField(_('theme skin'), choices=ege_theme.skins, max_length=250, blank=True, null=True)
+    theme_skin = CharField(_('theme skin'), choices=suap_ead.skins, max_length=250, blank=True, null=True)
     legends = NullBooleanField(_('legends'), blank=True, null=True)
     sign_language = NullBooleanField(_('sign language'), blank=True, null=True)
     screen_reader = NullBooleanField(_('screen reader'), blank=True, null=True)

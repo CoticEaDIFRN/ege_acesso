@@ -1,10 +1,10 @@
-# EGE Acesso
+# SUAP-EaD Acesso
 
 
 
 ## Objetivo
 
-Desenvolver e implantar um sistema de autenticação unificado que utilize o AD para as aplicações Web e Mobile Android que fazem parte do EGE (Ecosistema de Gestão Educacional).
+Desenvolver e implantar um sistema de autenticação unificado que utilize o AD para as aplicações Web e Mobile Android que fazem parte do SUAP-EaD.
 
 
 ## Justificativa
@@ -54,10 +54,10 @@ Desenvolver e implementar um Web Single Sign-On (W-SSO) e um Android Mobile Auth
 ```bash
 
 # using curl
-curl -X GET http://localhost/ege/acesso/api/v1/users/?format=json -H 'Authorization: Secret _EGE_ACESSO_JWT_SECRET_'
+curl -X GET http://localhost/sead/acesso/api/v1/users/?format=json -H 'Authorization: Secret _SUAP_EAD_ACESSO_JWT_SECRET_'
 
 
 # using httpie
-http --json http://localhost/ege/acesso/api/v1/users/  'Authorization:Secret _EGE_ACESSO_JWT_SECRET_'
+http --json http://localhost/sead/acesso/api/v1/users/  'Authorization:Secret _SUAP_EAD_ACESSO_JWT_SECRET_'
 
 ```

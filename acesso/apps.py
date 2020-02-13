@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class EgeAcessoConfig(AppConfig):
-    name = 'ege_acesso'
+    name = 'acesso'
     verbose_name = 'Acesso'
