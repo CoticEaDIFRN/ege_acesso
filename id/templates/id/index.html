@@ -7,10 +7,10 @@
 {% block page-title %}<a href="{% url 'admin:index' %}">Perfil de {{ sead.user.presentation_name|safe }}</a>{% endblock %}
 
 {% block user_menu_options %}
-    <h5 class="p-4 text-center">
+    <h5 class="p-4 text-eEcenter">
         {% trans "Welcome" %}, <span class="text-bold">{% firstof sead.user.social_name user.get_username %}!</span>
     </h5>
-    <a href="/sead/perfil/acessibilidade">Acessibilidade</a>
+    <a href="/sead/id/acessibilidade">Acessibilidade</a>
     <!--<div id="edit">-->
         <!--<button_edit></button_edit>-->
     <!--</div>-->

@@ -125,7 +125,7 @@ class Migration(migrations.Migration):
                 ('redirect_uri', models.TextField(verbose_name='redirect_uri')),
                 ('referer', models.TextField(blank=True, null=True, verbose_name='referer')),
                 ('expire_at', models.DateTimeField(verbose_name='expireAt')),
-                ('application', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='acesso.Application', verbose_name='application')),
+                ('application', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='id.Application', verbose_name='application')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='user')),
             ],
             options={
@@ -136,7 +136,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='special_needs',
-            field=models.ManyToManyField(to='acesso.SpecialNeed', verbose_name='special needs'),
+            field=models.ManyToManyField(to='id.SpecialNeed', verbose_name='special needs'),
         ),
         migrations.AddField(
             model_name='user',

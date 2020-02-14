@@ -1,4 +1,4 @@
-# SUAP-EaD Acesso
+# SUAP-EaD Id
 
 
 
@@ -54,10 +54,10 @@ Desenvolver e implementar um Web Single Sign-On (W-SSO) e um Android Mobile Auth
 ```bash
 
 # using curl
-curl -X GET http://localhost/sead/acesso/api/v1/users/?format=json -H 'Authorization: Secret _SUAP_EAD_ACESSO_JWT_SECRET_'
+curl -X GET http://localhost/sead/id/api/v1/users/?format=json -H 'Authorization: Secret _SUAP_EAD_ID_JWT_SECRET_'
 
 
 # using httpie
-http --json http://localhost/sead/acesso/api/v1/users/  'Authorization:Secret _SUAP_EAD_ACESSO_JWT_SECRET_'
+http --json http://localhost/sead/id/api/v1/users/  'Authorization:Secret _SUAP_EAD_ID_JWT_SECRET_'
 
 ```

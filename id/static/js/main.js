@@ -72,7 +72,7 @@ const page = new Vue({
 
         axios({
           method: 'get',
-          url: `../acesso/api/v1/users/${sead_user}`
+          url: `../id/api/v1/users/${sead_user}`
         })
         .then(response => {
             this.biografy = response.data.biografy;

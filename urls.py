@@ -13,15 +13,14 @@ urlpatterns = [
             [
                 path('admin/', admin.site.urls),
                 path('', include('django.contrib.auth.urls')),
-                path('', include('acesso.urls', namespace='api_v1')),
+                path('', include('id.urls', namespace='api_v1')),
                 # path('api-auth/', include('rest_framework.urls')),
                 # path('logout/', jwt_logout, name='logout'),
                 # path('', include('suap_ead.urls', namespace='suap_ead')),
             ]
         )
     ),
-    path('', RedirectView.as_view(url=settings.LOGIN_REDIRECT_URL)),
-    # path('', RedirectView.as_view(url=settings.URL_PATH_PREFIX)),
+    path('', RedirectView.as_view(url=settings.URL_PATH_PREFIX)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

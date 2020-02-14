@@ -11,6 +11,14 @@ from .models import Application, TransactionToken
 
 
 @login_required
+def perfil_index(request):
+    return render(request, template_name='id/index.html', context={'login_url': settings.LOGIN_URL})
+    # if request.COOKIES.get('hide_config'):
+    # else:
+    #     return HttpResponseRedirect('/sead/id/acessibilidade')
+
+
+@login_required
 def authorize_view(request):
     print("authorize_view")
     assert 'client_id' in request.GET, "empty client_id on get"
@@ -39,23 +47,15 @@ def secret_validate_view(request, secret):
     return JsonResponse({"result": "OK", "client_id": application.client_id})
 
 
-@login_required
-def perfil_index(request):
-    if request.COOKIES.get('hide_config'):
-        return render(request, template_name='perfil/index.html', context={'login_url': settings.LOGIN_URL})
-    else:
-        return HttpResponseRedirect('/sead/perfil/acessibilidade')
-
-
 class AcessibilidadeService(View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, template_name='perfil/painel_acessibilidade.html')
+        return render(request, template_name='id/painel_acessibilidade.html')
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
         print("Estou aqui.")
-        url = settings.SUAP_EAD_ACESSO_JWT_ROOT + 'api/v1/users/%s/biografy/' % request.user.username
+        url = settings.SUAP_EAD_ID_JWT_ROOT + 'api/v1/users/%s/biografy/' % request.user.username
         data = {"biografy": json.loads(request.body)["biografy"]}
         result = post_json(url, data)
         return HttpResponse('{"successs": true}')
@@ -64,13 +64,13 @@ class AcessibilidadeService(View):
 class UserBiografyService(View):
 
     def get(self, request, *args, **kwargs):
-        url = settings.SUAP_EAD_ACESSO_JWT_ROOT + 'api/v1/users/%s/biografy/' % request.user.username
+        url = settings.SUAP_EAD_ID_JWT_ROOT + 'api/v1/users/%s/biografy/' % request.user.username
         result = get_json(url)
         return HttpResponse('{"biografy": "%s"}' % result.biografy)
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
-        url = settings.SUAP_EAD_ACESSO_JWT_ROOT + 'api/v1/users/%s/biografy/' % request.user.username
+        url = settings.SUAP_EAD_ID_JWT_ROOT + 'api/v1/users/%s/biografy/' % request.user.username
         data = {"biografy": json.loads(request.body)["biografy"]}
         result = post_json(url, data)
         return HttpResponse('{"successs": true}')
@@ -79,13 +79,13 @@ class UserBiografyService(View):
 class UserEmailService(View):
 
     def get(self, request, *args, **kwargs):
-        url = settings.SUAP_EAD_ACESSO_JWT_ROOT + 'api/v1/users/%s/email/' % request.user.username
+        url = settings.SUAP_EAD_ID_JWT_ROOT + 'api/v1/users/%s/email/' % request.user.username
         result = get_json(url)
         return HttpResponse('{"email": "%s"}' % result.email)
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
-        url = settings.SUAP_EAD_ACESSO_JWT_ROOT + 'api/v1/users/%s/email/' % request.user.username
+        url = settings.SUAP_EAD_ID_JWT_ROOT + 'api/v1/users/%s/email/' % request.user.username
         data = {"email": json.loads(request.body)["email"]}
         result = post_json(url, data)
         return HttpResponse('{"successs": true}')

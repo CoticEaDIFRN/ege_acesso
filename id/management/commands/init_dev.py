@@ -70,13 +70,13 @@ class Command(BaseCommand):
         allowed_web_origins = ''
         allowed_logout_urls = ''
         for host in ['sead', 'localhost'] + options['myip']:
-            for service in ['acesso', 'dashboard', 'perfil']:
+            for service in ['id', 'dashboard']:
                 allowed_callback_urls += 'http://%s/sead/%s/jwt/complete/\n' % (host, service)
                 allowed_web_origins += 'http://%s/sead/%s/jwt/login/\n' % (host, service)
                 allowed_logout_urls += 'http://%s/sead/%s/jwt/logout/\n' % (host, service)
 
-        app = Application.objects.filter(client_id=env('SUAP_EAD_ACESSO_JWT_CLIENT_ID'),
-                                         secret=env('SUAP_EAD_ACESSO_JWT_SECRET')).first()
+        app = Application.objects.filter(client_id=env('SUAP_EAD_ID_JWT_CLIENT_ID'),
+                                         secret=env('SUAP_EAD_ID_JWT_SECRET')).first()
         if app is None:
             print("creating app...\n")
             app = Application()
@@ -84,10 +84,10 @@ class Command(BaseCommand):
             print("application always exists\n")
 
         app.owner = su
-        app.name = 'SUAP_EAD_acesso'
+        app.name = 'SUAP_EAD_ID'
         app.description = 'some description'
-        app.client_id = env('SUAP_EAD_ACESSO_JWT_CLIENT_ID')
-        app.secret = env('SUAP_EAD_ACESSO_JWT_SECRET')
+        app.client_id = env('SUAP_EAD_ID_JWT_CLIENT_ID')
+        app.secret = env('SUAP_EAD_ID_JWT_SECRET')
         app.logo = None
         app.allowed_callback_urls = allowed_callback_urls
         app.allowed_web_origins = allowed_web_origins
@@ -97,6 +97,6 @@ class Command(BaseCommand):
         app.deleted_at = None
         app.save()
 
-        print("application client_id=%s" % env('SUAP_EAD_ACESSO_JWT_CLIENT_ID'))
-        print("application secret=%s" % env('SUAP_EAD_ACESSO_JWT_SECRET'))
+        print("application client_id=%s" % env('SUAP_EAD_ID_JWT_CLIENT_ID'))
+        print("application secret=%s" % env('SUAP_EAD_ID_JWT_SECRET'))
         print("\nDone.")
