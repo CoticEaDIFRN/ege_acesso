@@ -149,6 +149,14 @@ class User(AbstractUser):
         return self.civil_name
 
     @property
+    def sigla(self):
+        parts = self.presentation_name.split(" ")
+        if len(parts) > 1:
+            return ("%s%s" % (parts[0][0], parts[-1][0])).upper()
+        else:
+            return parts[0][0].upper()
+
+    @property
     def status(self):
         result = ""
         result += "%s " % (_("active") if self.is_active else _("inactive"))

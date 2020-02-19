@@ -16,4 +16,4 @@ class UserSerializer(ModelSerializer):
                   'email', 'enterprise_email', 'academic_email', 'scholar_email', 'photo_url', 'biografy',
                   'is_biografy_public', 'photo_solicitation_at', 'photo_approved_at', 'photo_approved_by', 'font_size',
                   'theme_skin', 'legends', 'sign_language', 'screen_reader', 'special_needs', 'is_special_needs_public',
-                  'pending_photo', 'valid_photo')
+                  'pending_photo', 'valid_photo', 'printing_name', 'sigla')
