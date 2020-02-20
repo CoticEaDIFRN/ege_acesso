@@ -49,7 +49,7 @@ def secret_validate_view(request, secret):
 class AcessibilidadeService(View):
 
     def get(self, request, *args, **kwargs):
-        return render(request, template_name='id/painel_acessibilidade.html')
+        return render(request, template_name='id/acessibilidade.html')
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
