@@ -20,7 +20,6 @@ def perfil_index(request):
 
 @login_required
 def authorize_view(request):
-    print("authorize_view")
     assert 'client_id' in request.GET, "empty client_id on get"
     assert 'state' in request.GET, "state required"
     assert 'redirect_uri' in request.GET
@@ -54,7 +53,6 @@ class AcessibilidadeService(View):
 
     @method_decorator(csrf_exempt)
     def post(self, request, *args, **kwargs):
-        print("Estou aqui.")
         url = settings.SUAP_EAD_ID_JWT_ROOT + 'api/v1/users/%s/biografy/' % request.user.username
         data = {"biografy": json.loads(request.body)["biografy"]}
         result = post_json(url, data)

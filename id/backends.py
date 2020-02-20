@@ -7,5 +7,4 @@ class LDAPBackend(ModelBackend):
 
     def authenticate(self, *args, **kwargs):
         result = ldap.authenticate(*args, **kwargs)
-        print(result)
         return result
