@@ -4,20 +4,23 @@ from django.views.generic.base import TemplateView
 from django.views.generic import RedirectView
 from django.views.decorators.csrf import csrf_exempt
 from .views import authorize_view, validate_view, secret_validate_view
-from .views import perfil_index, AcessibilidadeService, UserBiografyService, UserEmailService
+from .views import index, acessibilidade, UserBiografyService, UserEmailService
 from .services import router, UserBiografyService, UserEmailService
-
 
 app_name = 'id'
 urlpatterns = [
-    path('', perfil_index),
-    path('api/v1/', include(router.urls)),
-    path('api/v1/users/<str:username>/biografy/', csrf_exempt(UserBiografyService.as_view())),
-    path('api/v1/users/<str:username>/email/', csrf_exempt(UserEmailService.as_view())),
-    path('api/v1/secret/<str:secret>/', secret_validate_view),
-    path('jwt/authorize/', authorize_view, name='authorize_view'),
-    path('jwt/validate/', validate_view, name='validate_view'),
-    path('acessibilidade', csrf_exempt(AcessibilidadeService.as_view())),
-    path('biografy/', csrf_exempt(UserBiografyService.as_view())),
-    path('email/', csrf_exempt(UserEmailService.as_view())),
+    path('', index, name='index'),
+    path('acessibilidade/', acessibilidade, name='acessibilidade'),
+    path(
+        'jwt/', 
+        include([
+            path('authorize/', authorize_view, name='authorize_view'),
+            path('validate/', validate_view, name='validate_view'),
+        ])
+    ),
+    path('api/docs/', TemplateView.as_view(
+        template_name='suap_ead/swagger-ui.html',
+        extra_context={'schema_url':'openapi-schema'}
+    ), name='swagger-ui'),
+    path('api/v1/', include('id.urls_v1', namespace='api_v1'))
 ]

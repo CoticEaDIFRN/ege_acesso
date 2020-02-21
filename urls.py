@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework import urls
+from rest_framework import urls, schemas
 
 
 urlpatterns = [
@@ -13,7 +13,13 @@ urlpatterns = [
             [
                 path('admin/', admin.site.urls),
                 path('', include('django.contrib.auth.urls')),
-                path('', include('id.urls', namespace='api_v1')),
+                path('', include('id.urls', namespace='id')),
+                path('api', schemas.get_schema_view(
+                    title="ID - Identidade do usuários",
+                    description="API for all things …",
+                    version="1.0.0"
+                ), name='openapi-schema'),    
+
                 # path('api-auth/', include('rest_framework.urls')),
                 # path('logout/', jwt_logout, name='logout'),
                 # path('', include('suap_ead.urls', namespace='suap_ead')),

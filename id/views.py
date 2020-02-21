@@ -11,11 +11,13 @@ from .models import Application, TransactionToken
 
 
 @login_required
-def perfil_index(request):
+def index(request):
     return render(request, template_name='id/index.html', context={'login_url': settings.LOGIN_URL})
-    # if request.COOKIES.get('hide_config'):
-    # else:
-    #     return HttpResponseRedirect('/sead/id/acessibilidade')
+
+
+@login_required
+def acessibilidade(request):
+    return render(request, template_name='id/acessibilidade.html')
 
 
 @login_required
