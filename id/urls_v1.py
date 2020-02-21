@@ -7,10 +7,14 @@ from rest_framework_swagger.views import get_swagger_view
 from .views import authorize_view, validate_view, secret_validate_view
 from .views import AcessibilidadeService, UserBiografyService, UserEmailService
 from .services import router, UserBiografyService, UserEmailService
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Pastebin API')
 
 app_name = 'api_v1'
 urlpatterns = [
     path('', include(router.urls)),
+    path('sw/', schema_view),
     path('redoc/', TemplateView.as_view(
         template_name='suap_ead/redoc.html',
         extra_context={'schema_url':'openapi-schema'}
