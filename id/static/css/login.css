@@ -27,7 +27,6 @@ form {
 
 input {
     font-size: 18px;
-    padding: 10px 10px 10px 5px;
     -webkit-appearance: none;
     display: block;
     background: #fafafa;
@@ -38,7 +37,10 @@ input {
     border-bottom: 1px solid #757575;
 }
 
-input:focus { outline: none; }
+input:focus { 
+    outline: none; 
+    color: green;
+}
 
 /* Label */
 
@@ -46,19 +48,7 @@ label {
     color: #86919a;
     font-size: 18px;
     font-weight: bold;
-    position: absolute;
     pointer-events: none;
-    left: 5px;
-    top: 10px;
-    transition: all 0.2s ease;
-}
-
-/* active */
-
-input:focus ~ label, input.used ~ label {
-    top: -20px;
-    transform: scale(.75); left: -2px;
-    color: green;
 }
 
 /* Highlight */
