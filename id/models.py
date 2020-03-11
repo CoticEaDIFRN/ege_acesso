@@ -114,7 +114,7 @@ class User(AbstractUser):
     sign_language = NullBooleanField(_('sign language'), blank=True, null=True)
     screen_reader = NullBooleanField(_('screen reader'), blank=True, null=True)
 
-    special_needs = ManyToManyField(SpecialNeed, verbose_name=_('special needs'))
+    special_needs = ManyToManyField(SpecialNeed, verbose_name=_('special needs'), blank=True, null=True)
     is_special_needs_public = NullBooleanField(_('show to all'))
 
     REQUIRED_FIELDS = []
