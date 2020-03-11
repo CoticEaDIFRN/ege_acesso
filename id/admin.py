@@ -10,7 +10,7 @@ class ApplicationInline(TabularInline):
 @register(User)
 class UserAdmin(ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('username', 'cpf', 'civil_name', 'social_name', 'status', 'active')}),
+        (None, {'fields': ('username', 'cpf', 'first_name', 'last_name', 'civil_name', 'social_name', 'status', 'active')}),
         (_('Relationship'), {'fields': ('campus', 'department', 'title', 'carrer', 'job')}),
         (_('E-Mails'), {'fields': ('email', 'enterprise_email', 'academic_email', 'scholar_email')}),
         (_('Dates'), {'fields': ('first_access', 'last_access', 'deleted')}),
@@ -21,9 +21,7 @@ class UserAdmin(ModelAdmin):
         (_('Accessibility'), {'fields': ('theme_skin', 'font_size', 'legends', 'sign_language', 'screen_reader',
                                          'is_special_needs_public', 'special_needs')}),
     )
-    readonly_fields = []
-    for fs in fieldsets:
-        readonly_fields += fs[1]['fields']
+    readonly_fields = ['first_access', 'last_access', 'status', 'civil_name', ]
     list_display = ('username', 'printing_name', 'cpf', 'status')
     list_filter = ('is_staff', 'is_superuser', 'is_active') + fieldsets[1][1]['fields']
     # + ('groups',)
